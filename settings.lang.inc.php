@@ -44,8 +44,8 @@ $REX['ADDON']['seo42']['settings']['lang'][1]['domain'] = 'addonfactory2.local';
 $REX['ADDON']['seo42']['settings']['lang'][1]['code'] = 'en';
 $REX['ADDON']['seo42']['settings']['lang'][1]['original_name'] = 'english';
 $REX['ADDON']['seo42']['settings']['lang'][1]['rewrite_mode'] = SEO42_REWRITEMODE_SPECIAL_CHARS;
-$REX['ADDON']['seo42']['settings']['lang'][1]['special_chars'] = '&';
-$REX['ADDON']['seo42']['settings']['lang'][1]['special_chars_rewrite'] = 'and';
+$REX['ADDON']['seo42']['settings']['lang'][1]['special_chars'] = 'Ä|ä|Ö|ö|Ü|ü|ß|&';
+$REX['ADDON']['seo42']['settings']['lang'][1]['special_chars_rewrite'] = 'Ae|ae|Oe|oe|Ue|ue|ss|und';
 
 $REX['ADDON']['seo42']['settings']['lang'][2]['domain'] = 'addonfactory3.local';
 $REX['ADDON']['seo42']['settings']['lang'][2]['code'] = 'el';

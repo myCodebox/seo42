@@ -33,6 +33,9 @@ class seo42_utils {
 	public static function init($params) {
 		global $REX;
 
+		// domain check
+		self::checkForClangDomain();
+
 		// init globals
 		seo42::init();
 
@@ -58,9 +61,6 @@ class seo42_utils {
 			// init rewriter 
 			$rewriter = new RexseoRewrite($REX['ADDON']['seo42']['settings']['levenshtein'], $REX['ADDON']['seo42']['settings']['rewrite_params']);
 			$rewriter->resolve();
-
-			// domain check
-			self::checkForClangDomain();
 
 			// rewrite ep 
 			rex_register_extension('URL_REWRITE', array ($rewriter, 'rewrite'));
@@ -714,9 +714,6 @@ class seo42_utils {
 				if (isset($REX['ADDON']['seo42']['settings']['lang'][$clangId]['domain']) && $_SERVER['SERVER_NAME'] == $REX['ADDON']['seo42']['settings']['lang'][$clangId]['domain']) {
 					$REX['CUR_CLANG'] = $clangId;
 					$REX['SERVER'] = 'http://' . $REX['ADDON']['seo42']['settings']['lang'][$clangId]['domain'] . '/';
-				
-					// reinit stuff
-					seo42::init();
 				}			
 			}
 		}

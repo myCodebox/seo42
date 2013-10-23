@@ -164,11 +164,24 @@ class RexseoRewrite
   */
   function resolve_from_pathlist($path)
   {
-    global $REXSEO_URLS, $REX;
+    global $REXSEO_URLS, $REXSEO_IDS, $REX;
+
 
 if ($REX['ADDON']['seo42']['settings']['multidomain_mode']) {
-	$path = $_SERVER['SERVER_NAME'] . '|' . $path;
-}
+	foreach ($REXSEO_IDS as $key => $value) {
+		if ($value[$REX['CUR_CLANG']]['url'] == $path) {
+			$articleId = $key;
+			break;
+		}
+	}
+	
+	if (isset($articleId)) {
+	 	self::setArticleId($articleId,$REX['CUR_CLANG']);
+          return true;
+	} else {
+		return false;
+	}
+} else {
 
     if(isset($REXSEO_URLS[$path]))
     {
@@ -193,6 +206,8 @@ if ($REX['ADDON']['seo42']['settings']['multidomain_mode']) {
       }
     }
     return false;
+}
+
   }
 
 
@@ -291,10 +306,6 @@ if ($REX['ADDON']['seo42']['settings']['multidomain_mode']) {
                        'divider'        => $params['divider']
                        );
     $url = rex_register_extension_point('REXSEO_POST_REWRITE', $url, $ep_params);
-
-if ($REX['ADDON']['seo42']['settings']['multidomain_mode']) {
-	$url = str_replace($REX['ADDON']['seo42']['settings']['lang'][$clang]['domain'] . '|', '', $url);
-}
 
     return $url;
   }
@@ -517,11 +528,6 @@ function rexseo_generate_pathlist($params)
 
       // NORMALE URL ERZEUGUNG
       {
-
-if ($REX['ADDON']['seo42']['settings']['multidomain_mode']) {
-	$pathname = $REX['ADDON']['seo42']['settings']['lang'][$clang]['domain'] . '|';
-}
-
         // LANG SLUG
         if (count($REX['CLANG']) > 1 && $clang != $REX['ADDON']['seo42']['settings']['hide_langslug'] && !$REX['ADDON']['seo42']['settings']['multidomain_mode'])
         {
@@ -597,14 +603,14 @@ if ($REX['ADDON']['seo42']['settings']['multidomain_mode']) {
 			$REX['ADDON']['seo42']['settings']['homeurl'] == 2 &&
 			$db->getValue('id') == $REX['START_ARTICLE_ID']) {
 
-			$pathname = $REX['ADDON']['seo42']['settings']['lang'][$clang]['domain'] . '|';
+			$pathname = '';
 
 		} elseif ($db->getValue('id') == $REX['START_ARTICLE_ID'] && 
 				   $db->getValue('clang') == $REX['ADDON']['seo42']['settings']['homelang'] && 
 				   ($REX['ADDON']['seo42']['settings']['homeurl'] == 1 ||
 				   $REX['ADDON']['seo42']['settings']['homeurl'] == 2)) {
 				
-			$pathname = $REX['ADDON']['seo42']['settings']['lang'][$clang]['domain'] . '|';
+			$pathname = '';
 
         } elseif ($REX['ADDON']['seo42']['settings']['homeurl'] == 2 &&
 				 $db->getValue('id') == $REX['START_ARTICLE_ID'] &&

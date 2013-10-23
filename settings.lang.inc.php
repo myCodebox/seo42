@@ -4,6 +4,12 @@
 // **  DELETE REDAXO CACHE AFTER YOU MADE CHANGES TO THIS FILE!  **
 // ****************************************************************
 
+// MULTIDOMAIN MODE
+// set to true if you want to have seperate domains for each clang
+// each langauge needs then $REX['ADDON']['seo42']['settings']['lang'][x]['domain'] setting
+
+$REX['ADDON']['seo42']['settings']['multidomain_mode'] = true;
+
 // GLOBAL SPECIAL CHAR REWRITE
 // used for rewriting special chars that are language dependent. valid for all languages.
 // separate values by | (pipe) symbol
@@ -11,43 +17,48 @@
 $REX['ADDON']['seo42']['settings']['global_special_chars'] = '';
 $REX['ADDON']['seo42']['settings']['global_special_chars_rewrite'] = '';
 
+// URLENCODE SETTINGS
+// only used when lang settings are set to SEO42_REWRITEMODE_URLENCODE
+
+$REX['ADDON']['seo42']['settings']['urlencode_lowercase'] = false;
+$REX['ADDON']['seo42']['settings']['urlencode_whitespace_replace']  = '_';
+
 // LANGUAGE SPECIFIC SETTINGS
 // if no additional languages are defined in this array, redaxo language settings will be taken
 // rewrite modes: 
-//   * SEO42_REWRITEMODE_SPECIAL_CHARS (specify also: special_chars, special_chars_rewrite)
-//   * SEO42_REWRITEMODE_INHERIT (specify also: inherit_from_clang)
+//   * SEO42_REWRITEMODE_SPECIAL_CHARS --> specify also: special_chars, special_chars_rewrite
+//   * SEO42_REWRITEMODE_INHERIT --> specify also: inherit_from_clang
 //   * SEO42_REWRITEMODE_URLENCODE
 // separate special_chars values by | (pipe) symbol
 // special chars language tables: http://unicode.e-workers.de/
 // collection of language presets: https://github.com/RexDude/seo42/issues/61
 
+$REX['ADDON']['seo42']['settings']['lang'][0]['domain'] = 'addonfactory.local';
 $REX['ADDON']['seo42']['settings']['lang'][0]['code'] = 'de';
 $REX['ADDON']['seo42']['settings']['lang'][0]['original_name'] = 'deutsch';
 $REX['ADDON']['seo42']['settings']['lang'][0]['rewrite_mode'] = SEO42_REWRITEMODE_SPECIAL_CHARS;
 $REX['ADDON']['seo42']['settings']['lang'][0]['special_chars'] = 'Ä|ä|Ö|ö|Ü|ü|ß|&';
 $REX['ADDON']['seo42']['settings']['lang'][0]['special_chars_rewrite'] = 'Ae|ae|Oe|oe|Ue|ue|ss|und';
 
-/*
+$REX['ADDON']['seo42']['settings']['lang'][1]['domain'] = 'addonfactory2.local';
 $REX['ADDON']['seo42']['settings']['lang'][1]['code'] = 'en';
 $REX['ADDON']['seo42']['settings']['lang'][1]['original_name'] = 'english';
 $REX['ADDON']['seo42']['settings']['lang'][1]['rewrite_mode'] = SEO42_REWRITEMODE_SPECIAL_CHARS;
 $REX['ADDON']['seo42']['settings']['lang'][1]['special_chars'] = '&';
 $REX['ADDON']['seo42']['settings']['lang'][1]['special_chars_rewrite'] = 'and';
 
+$REX['ADDON']['seo42']['settings']['lang'][2]['domain'] = 'addonfactory3.local';
 $REX['ADDON']['seo42']['settings']['lang'][2]['code'] = 'el';
 $REX['ADDON']['seo42']['settings']['lang'][2]['original_name'] = 'ελληνικά';
 $REX['ADDON']['seo42']['settings']['lang'][2]['rewrite_mode'] = SEO42_REWRITEMODE_URLENCODE;
 
+$REX['ADDON']['seo42']['settings']['lang'][3]['domain'] = 'addonfactory4.local';
 $REX['ADDON']['seo42']['settings']['lang'][3]['code'] = 'zh';
 $REX['ADDON']['seo42']['settings']['lang'][3]['original_name'] = '中国的';
 $REX['ADDON']['seo42']['settings']['lang'][3]['rewrite_mode'] = SEO42_REWRITEMODE_INHERIT;
 $REX['ADDON']['seo42']['settings']['lang'][3]['inherit_from_clang'] = 1;
-*/
 
 // ****************************************************************
 // **  DELETE REDAXO CACHE AFTER YOU MADE CHANGES TO THIS FILE!  **
 // ****************************************************************
-
-
-
 

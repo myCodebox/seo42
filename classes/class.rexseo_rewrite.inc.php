@@ -164,7 +164,11 @@ class RexseoRewrite
   */
   function resolve_from_pathlist($path)
   {
-    global $REXSEO_URLS;
+    global $REXSEO_URLS, $REX;
+
+if ($REX['ADDON']['seo42']['settings']['multidomain_mode']) {
+	$path = $_SERVER['SERVER_NAME'] . '|' . $path;
+}
 
     if(isset($REXSEO_URLS[$path]))
     {
@@ -284,11 +288,13 @@ class RexseoRewrite
                        'subdir'         => $subdir,
                        'urlparams'      => $urlparams,
                        'params'         => $params['params'],
-                       'divider'        => $params['divider'],
-                       'params_starter' => $REX['ADDON']['seo42']['settings']['params_starter'],
-                       'urlencode'      => $REX['ADDON']['seo42']['settings']['urlencode'],
+                       'divider'        => $params['divider']
                        );
     $url = rex_register_extension_point('REXSEO_POST_REWRITE', $url, $ep_params);
+
+if ($REX['ADDON']['seo42']['settings']['multidomain_mode']) {
+	$url = str_replace($REX['ADDON']['seo42']['settings']['lang'][$clang]['domain'] . '|', '', $url);
+}
 
     return $url;
   }
@@ -511,8 +517,13 @@ function rexseo_generate_pathlist($params)
 
       // NORMALE URL ERZEUGUNG
       {
+
+if ($REX['ADDON']['seo42']['settings']['multidomain_mode']) {
+	$pathname = $REX['ADDON']['seo42']['settings']['lang'][$clang]['domain'] . '|';
+}
+
         // LANG SLUG
-        if (count($REX['CLANG']) > 1 && $clang != $REX['ADDON']['seo42']['settings']['hide_langslug'])
+        if (count($REX['CLANG']) > 1 && $clang != $REX['ADDON']['seo42']['settings']['hide_langslug'] && !$REX['ADDON']['seo42']['settings']['multidomain_mode'])
         {
           $pathname = '';
           $pathname = rexseo_appendToPath($pathname, seo42::getLangCode($clang), $id, $clang); 
@@ -582,20 +593,25 @@ function rexseo_generate_pathlist($params)
         $pathname = substr($pathname,0,strlen($pathname)-1).$REX['ADDON']['seo42']['settings']['url_ending'];
 
         // STARTSEITEN URL FORMAT
-        if($db->getValue('id')    == $REX['START_ARTICLE_ID'] && 
-           $db->getValue('clang') == $REX['ADDON']['seo42']['settings']['homelang'] && 
-           ($REX['ADDON']['seo42']['settings']['homeurl'] == 1 ||
-           $REX['ADDON']['seo42']['settings']['homeurl'] == 2))
-        {
-          $pathname = '';
-        }
-        elseif($REX['ADDON']['seo42']['settings']['homeurl'] == 2 &&
-               $db->getValue('id') == $REX['START_ARTICLE_ID'] &&
-               count($REX['CLANG']) > 1)
-        {
-          $pathname = seo42::getLangCode($clang).'/';
-        }
+		if ($REX['ADDON']['seo42']['settings']['multidomain_mode'] &&
+			$REX['ADDON']['seo42']['settings']['homeurl'] == 2 &&
+			$db->getValue('id') == $REX['START_ARTICLE_ID']) {
 
+			$pathname = $REX['ADDON']['seo42']['settings']['lang'][$clang]['domain'] . '|';
+
+		} elseif ($db->getValue('id') == $REX['START_ARTICLE_ID'] && 
+				   $db->getValue('clang') == $REX['ADDON']['seo42']['settings']['homelang'] && 
+				   ($REX['ADDON']['seo42']['settings']['homeurl'] == 1 ||
+				   $REX['ADDON']['seo42']['settings']['homeurl'] == 2)) {
+				
+			$pathname = $REX['ADDON']['seo42']['settings']['lang'][$clang]['domain'] . '|';
+
+        } elseif ($REX['ADDON']['seo42']['settings']['homeurl'] == 2 &&
+				 $db->getValue('id') == $REX['START_ARTICLE_ID'] &&
+				 count($REX['CLANG']) > 1) {
+
+			$pathname = seo42::getLangCode($clang).'/';
+        }
       }
 
       // SANITIZE MULTIPLE "-" IN PATHNAME
@@ -823,7 +839,7 @@ function rexseo_appendToPath($path, $name, $article_id, $clang)
 
   if ($name != '')
   {
-    if ($REX['ADDON']['seo42']['settings']['urlencode'] || (isset($REX['ADDON']['seo42']['settings']['lang'][$clang]['rewrite_mode']) && $REX['ADDON']['seo42']['settings']['lang'][$clang]['rewrite_mode'] == SEO42_REWRITEMODE_URLENCODE))
+    if (isset($REX['ADDON']['seo42']['settings']['lang'][$clang]['rewrite_mode']) && $REX['ADDON']['seo42']['settings']['lang'][$clang]['rewrite_mode'] == SEO42_REWRITEMODE_URLENCODE)
     {
       // trim stuff
       $name = trim($name, " \t\r\n.");

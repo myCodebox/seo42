@@ -15,6 +15,10 @@ define('SEO42_REWRITEMODE_SPECIAL_CHARS', 0);
 define('SEO42_REWRITEMODE_URLENCODE', 1);
 define('SEO42_REWRITEMODE_INHERIT', 2);
 
+define('SEO42_ARTICLEID_DISALLOW', 0);
+define('SEO42_ARTICLEID_REDIRECT', 1);
+define('SEO42_ARTICLEID_ALLOW', 2);
+
 class seo42_utils {
 	public static function appendToPageHeader($params) {
 		global $REX;
@@ -54,6 +58,9 @@ class seo42_utils {
 			// init rewriter 
 			$rewriter = new RexseoRewrite($REX['ADDON']['seo42']['settings']['levenshtein'], $REX['ADDON']['seo42']['settings']['rewrite_params']);
 			$rewriter->resolve();
+
+			// domain check
+			self::checkForClangDomain();
 
 			// rewrite ep 
 			rex_register_extension('URL_REWRITE', array ($rewriter, 'rewrite'));
@@ -699,5 +706,19 @@ class seo42_utils {
 		}
 	}
 
+	public static function checkForClangDomain() {
+		global $REX;
 
+		if (!$REX['REDAXO'] && $REX['ADDON']['seo42']['settings']['multidomain_mode']) {
+			foreach ($REX['ADDON']['seo42']['settings']['lang'] as $clangId => $value) {
+				if (isset($REX['ADDON']['seo42']['settings']['lang'][$clangId]['domain']) && $_SERVER['SERVER_NAME'] == $REX['ADDON']['seo42']['settings']['lang'][$clangId]['domain']) {
+					$REX['CUR_CLANG'] = $clangId;
+					$REX['SERVER'] = 'http://' . $REX['ADDON']['seo42']['settings']['lang'][$clangId]['domain'] . '/';
+				
+					// reinit stuff
+					seo42::init();
+				}			
+			}
+		}
+	}
 }

@@ -118,3 +118,8 @@ FileETag None
 	# REWRITE ALL OTHER REQUESTS TO INDEX.PHP
 	RewriteRule ^(.*)$ index.php?%{QUERY_STRING} [L]
 </IfModule>
+
+# GNU Terry Pratchett HTTP-Header
+<IfModule headers_module>
+	header set X-Clacks-Overhead "GNU Terry Pratchett"
+</IfModule>
